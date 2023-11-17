@@ -1,4 +1,4 @@
-name: Build and Release DLL
+name: CI
 on:
   push:
     branches:
@@ -10,17 +10,37 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Build DLL
+      - name: Build DLL (Release)
         run: msbuild BasicDLL.sln /p:Configuration=Release
 
-      - name: Archive DLL and PDB
+      - name: Release DLL (Release)
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
           automatic_release_tag: "latest"
-          title: Build for SHA "${{github.sha}}"
+          title: Build for SHA "${{github.sha}}" (Release)
+          files: |
+            build/Release-x64/BasicDLL.dll
+            build/Release-x64/BasicDLL.pdb
+            build/Release-x64/intermediates/BasicDLL.log
+          prerelease: no
+
+      - name: Build DLL (Debug)
+        run: msbuild BasicDLL.sln /p:Configuration=Debug
+
+      - name: Release DLL (Debug)
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: "latest"
+          title: Build for SHA "${{github.sha}}" (Debug)
+          files: |
+            build/Debug-x64/BasicDLL.dll
+            build/Debug-x64/BasicDLL.pdb
+            build/Debug-x64/intermediates/BasicDLL.log
+          prerelease: no
