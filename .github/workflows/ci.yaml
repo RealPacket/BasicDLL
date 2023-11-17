@@ -1,0 +1,26 @@
+name: Build and Release DLL
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Build DLL
+        run: msbuild BasicDLL.sln /p:Configuration=Release
+
+      - name: Archive DLL and PDB
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: "latest"
+          title: Build for SHA "${{github.sha}}"
