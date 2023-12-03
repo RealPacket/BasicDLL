@@ -21,6 +21,7 @@ jobs:
       - name: Build DLL (Debug)
         run: msbuild BasicDLL.sln /p:Configuration=Debug
   release:
+    needs: build
     permissions:
       contents: write
     runs-on: windows-latest
