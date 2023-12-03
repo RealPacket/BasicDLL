@@ -16,16 +16,16 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Build DLL (Release x64)
-        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform=x64
+        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform="x64"
 
       - name: Build DLL (Debug x64)
-        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform=x64
+        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="x64"
 
       - name: Build DLL (Release Win32)
-        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform=Win32
+        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform="Win32"
 
       - name: Build DLL (Debug Win32)
-        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform=Win32
+        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="Win32"
 
       - name: Release DLL (Release x64)
         uses: marvinpinto/action-automatic-releases@v1.2.1
