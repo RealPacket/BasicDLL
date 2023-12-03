@@ -17,13 +17,14 @@
 /// <summary>
 /// Logs "Hello!"
 /// and exits after 5 seconds.
-/// 
+///
 /// Called with the hModule
 /// once the DLL is loaded.
 /// </summary>
 /// <param name="hModule">The module
 /// representing this DLL.</param>
-void entry(HMODULE hModule) {
+void entry(HMODULE hModule)
+{
     // create a console window for us
     AllocConsole();
     // holds the stdout file
@@ -33,12 +34,23 @@ void entry(HMODULE hModule) {
     // bind IO to CONOUT so we can print things
     // (without this, nothing will be displayed)
     freopen_s(&IO, "CONOUT$", "w", stdout);
-    // logs "Hello!" into the console
+    // handles IO being NULL/0,
+    // This is an edge case, as this should never happen.
+    if (IO == NULL) {
+        FreeConsole();
+        return;
+    }
+    // the next 2 lines are self explanitory,
+    // no need to explain them
+    // (unless you don't know what printf does)
+    // for some reason, std::cout and std::cerr doesn't work,
+    // and I'm not going to fix that,
+    // so we'll using printf_s.
     printf_s("Hello!\n");
-    // logs "Freeing console and exiting in 5 seconds..."
-    // into the console
-    printf_s("Freeing console and exiting in 5 seconds...\n");
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    printf_s("Freeing console and exiting in 2 seconds...\n");
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    // the console won't close if we don't close this.
+    fclose(IO);
     // Closes the console window
     FreeConsole();
     // Frees the library and exit/terminates this thread.
@@ -53,7 +65,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason)
     if (reason == DLL_PROCESS_ATTACH)
         // run the entry function
         std::thread(entry, hModule).detach();
-    // returns 1 (TRUE), indicating success.
+    // returns TRUE (1), indicating success.
     return TRUE;
 }
-
