@@ -22,6 +22,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: "refs/head/main"
           title: Build for SHA "${{github.sha}}" (Release)
           files: |
             build/Release-x64/BasicDLL.dll
@@ -36,6 +37,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: "refs/head/main"
           title: Build for SHA "${{github.sha}}" (Debug)
           files: |
             build/Debug-x64/BasicDLL.dll
