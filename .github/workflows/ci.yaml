@@ -28,7 +28,7 @@ jobs:
             build/Release-x64/BasicDLL.dll
             build/Release-x64/BasicDLL.pdb
             build/Release-x64/intermediates/BasicDLL.log
-          prerelease: no
+          prerelease: false
 
       - name: Build DLL (Debug)
         run: msbuild BasicDLL.sln /p:Configuration=Debug
@@ -43,4 +43,4 @@ jobs:
             build/Debug-x64/BasicDLL.dll
             build/Debug-x64/BasicDLL.pdb
             build/Debug-x64/intermediates/BasicDLL.log
-          prerelease: no
+          prerelease: false
