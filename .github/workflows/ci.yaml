@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_release:
     runs-on: windows-latest
 
     steps:
@@ -15,37 +15,62 @@ jobs:
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Build DLL (Release)
-        run: msbuild BasicDLL.sln /p:Configuration=Release
+      - name: Build DLL (Release x64)
+        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform=x64
 
-      - name: Build DLL (Debug)
-        run: msbuild BasicDLL.sln /p:Configuration=Debug
-  release:
-    needs: build
-    permissions:
-      contents: write
-    runs-on: windows-latest
-    steps:
-      - name: Release DLL (Release)
+      - name: Build DLL (Debug x64)
+        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform=x64
+
+      - name: Build DLL (Release Win32)
+        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform=Win32
+
+      - name: Build DLL (Debug Win32)
+        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform=Win32
+
+      - name: Release DLL (Release x64)
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
           automatic_release_tag: ${{github.sha}}
-          title: Build for SHA "${{github.sha}}" (Release)
+          title: Build for SHA "${{github.sha}}" (Release x64)
           files: |
             build/Release-x64/BasicDLL.dll
             build/Release-x64/BasicDLL.pdb
             build/Release-x64/intermediates/BasicDLL.log
           prerelease: false
 
-      - name: Release DLL (Debug)
+      - name: Release DLL (Debug x64)
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
           automatic_release_tag: "refs/head/main"
-          title: Build for SHA "${{github.sha}}" (Debug)
+          title: Build for SHA "${{github.sha}}" (Debug x64)
           files: |
             build/Debug-x64/BasicDLL.dll
             build/Debug-x64/BasicDLL.pdb
             build/Debug-x64/intermediates/BasicDLL.log
+          prerelease: false
+
+      - name: Release DLL (Release Win32)
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: ${{github.sha}}
+          title: Build for SHA "${{github.sha}}" (Release Win32)
+          files: |
+            build/Release-Win32/BasicDLL.dll
+            build/Release-Win32/BasicDLL.pdb
+            build/Release-Win32/intermediates/BasicDLL.log
+          prerelease: false
+
+      - name: Release DLL (Debug Win32)
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          automatic_release_tag: "refs/head/main"
+          title: Build for SHA "${{github.sha}}" (Debug Win32)
+          files: |
+            build/Debug-Win32/BasicDLL.dll
+            build/Debug-Win32/BasicDLL.pdb
+            build/Debug-Win32/intermediates/BasicDLL.log
           prerelease: false
