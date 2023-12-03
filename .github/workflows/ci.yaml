@@ -5,8 +5,12 @@ on:
       - main
 
 jobs:
-  build_and_release:
+  # Builds for x64
+  build_and_release_x64:
     runs-on: windows-latest
+    permissions:
+      # needed for releasing
+      contents: write
 
     steps:
       - name: Checkout code
@@ -17,17 +21,14 @@ jobs:
 
       - name: Build DLL (Release x64)
         run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform="x64"
+        id: build_release_x64
 
       - name: Build DLL (Debug x64)
         run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="x64"
-
-      - name: Build DLL (Release Win32)
-        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform="x86"
-
-      - name: Build DLL (Debug Win32)
-        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="x86"
+        id: build_debug_x64
 
       - name: Release DLL (Release x64)
+        if: steps.build_release_x64.outcome == 'success'
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
@@ -40,6 +41,7 @@ jobs:
           prerelease: false
 
       - name: Release DLL (Debug x64)
+        if: steps.build_debug_x64.outcome == 'success'
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
@@ -51,7 +53,32 @@ jobs:
             build/Debug-x64/intermediates/BasicDLL.log
           prerelease: false
 
+  # builds for Win32/x86
+  build_and_release_Win32:
+    runs-on: windows-latest
+    permissions:
+      # needed for releasing
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Build DLL (Release Win32)
+        if: always ()
+        run: msbuild BasicDLL.sln /p:Configuration=Release /p:Platform="x86"
+        id: build_release_win32
+
+      - name: Build DLL (Debug Win32)
+        if: always ()
+        run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="x86"
+        id: build_debug_win32
+
       - name: Release DLL (Release Win32)
+        if: steps.build_release_win32.outcome == 'success'
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
@@ -64,6 +91,7 @@ jobs:
           prerelease: false
 
       - name: Release DLL (Debug Win32)
+        if: steps.build_debug_win32.outcome == 'success'
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
