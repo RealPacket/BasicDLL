@@ -32,7 +32,7 @@ jobs:
         run: msbuild BasicDLL.sln /p:Configuration=Debug /p:Platform="x86"
 
       - name: ZIP the build folder
-        run: powershell Compress-Archive -Path "./build" -DestinationPath "./build.zip"
+        run: powershell ./zip-build.ps1
 
       - name: Release DLL
         uses: marvinpinto/action-automatic-releases@v1.2.1

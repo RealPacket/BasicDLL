@@ -13,6 +13,7 @@
 // for the std::this_thread::sleep_for
 // to yield the entry thread for 5 seconds
 #include <thread>
+#define BEEP
 
 /// <summary>
 /// Logs "Hello!"
@@ -28,15 +29,20 @@ void entry(HMODULE hModule)
     // create a console window for us
     AllocConsole();
     // holds the stdout file
-    FILE* IO{};
+    FILE *IO{};
     // sets the console title
-    SetConsoleTitle("Hyperion isn't here!");
+    SetConsoleTitle("Basic DLL");
+#ifdef BEEP
+    // Do a beep!
+    MessageBeep(MB_OK);
+#endif
     // bind IO to CONOUT so we can print things
     // (without this, nothing will be displayed)
     freopen_s(&IO, "CONOUT$", "w", stdout);
     // handles IO being NULL/0,
     // This is an edge case, as this should never happen.
-    if (IO == NULL) {
+    if (IO == NULL)
+    {
         FreeConsole();
         return;
     }
