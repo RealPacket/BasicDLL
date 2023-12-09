@@ -1,5 +1,5 @@
 // Basic DLL
-// that just logs Hello!
+// that just logs "Hello!"
 // and exits after 5 seconds.
 
 // for allocating console,
@@ -28,7 +28,7 @@ void entry(HMODULE hModule)
 {
     // create a console window for us
     AllocConsole();
-    // holds the stdout file
+    // holds the stdout "file"
     FILE *IO{};
     // sets the console title
     SetConsoleTitle("Basic DLL");
