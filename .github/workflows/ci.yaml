@@ -54,7 +54,7 @@ jobs:
           prerelease: false
 
   # builds for Win32/x86
-  build_and_release_Win32:
+  build_and_release_win32:
     runs-on: windows-latest
     permissions:
       # needed for releasing
@@ -95,7 +95,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{secrets.GITHUB_TOKEN}}
-          automatic_release_tag: "refs/head/main"
+          automatic_release_tag: "release"
           title: Build for SHA "${{github.sha}}" (Debug Win32)
           files: |
             build/Debug-Win32/BasicDLL.dll
